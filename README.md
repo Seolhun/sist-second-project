@@ -1,8 +1,9 @@
-## 오내미(오늘 일을 내일로 미루지 말자) : Spring MVC 1 SPA Project
+# 오내미(오늘 일을 내일로 미루지 말자) : Spring MVC 1 SPA Project
 
 #### *2016.03.14 ~ 2016.05.06*  
 
-- Group Member : gustn85kr, Seolhun, skdudgksmf, idryu2, Nayoung
-  - Front-End : idryu2, Seolhun, skdudgksmf, Nayoung 
-  - Back-End : gustn85kr, idryu2, Seolhun
-
+- Team Member & Role
+	- 설 훈(본인) : 로그인, 회원가입, 이메일(SMTP) 알림, 일정 검색기능 구현
+	- 박현수(팀장) : 달력과 일정관리 기능 구현
+	- 류정현 : 달력과 일정관리 리스트 기능 구현
+	- 신나영 : CSS 및 일정 세부 기능 구현
