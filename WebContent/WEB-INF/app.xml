@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	<context:component-scan base-package="com.sist.model"/>
+</beans>
+<!-- <beans>
+    <bean class="com.model.IntroModel" id="intro"/>
+	<bean class="com.model.LoginOKModel" id="loginOK"/>
+	<bean class="com.model.JoinOKModel" id="joinOK"/>
+	<bean class="com.model.ListAddModel" id="listAdd"/>
+	<bean class="com.model.EmailCheckModel" id="emailCheckOK"/>
+	<bean class="com.model.EmailSaveOKModel" id="emailSaveOK"/>
+	<bean class="com.model.EmailSaveGetModel" id="emailSaveGet"/>
+	<bean class="com.model.LogoutModel" id="logOut"/>
+	<bean class="com.model.OnmModel" id="onm"/>
+	<bean class="com.model.GetListNo" id="getListNo"/>
+</beans> -->

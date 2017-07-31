@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org///DTD Config 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+   <!-- properties 파일 읽기  -->
+   <properties resource="db.properties"/>
+   
+   <!-- VO,DTO 클래스 등록  -->
+   <typeAliases>
+     <typeAlias type="com.sist.dao.UserDTO" alias="User"/>
+     <typeAlias type="com.sist.dao.ListVO" alias="Olist"/>
+     <typeAlias type="com.sist.dao.CardVO" alias="Ocard"/>
+     <typeAlias type="com.sist.dao.CommVO" alias="Comm"/>
+     <typeAlias type="com.sist.dao.SearchVO" alias="Search"/>
+   </typeAliases>
+   
+   <!-- 개발환경 설정 -->
+   <environments default="development">    
+     <environment id="development">   
+       <!-- JDBC , MANAGED
+            COMMIT,ROLLBACK
+        -->   
+       <transactionManager type="JDBC"/> 
+       <!-- 
+            DataSource : 데이터베이스에 대한 모든 정보 
+            UNPOOLED : 요청시마다 Connection을 열고 닫고를 반복 
+            POOLED : DBCP (maxActive:8,maxIdle:8)
+            JNDI : 미리 톰캣에 정의를 하고 사용 
+       -->
+       <dataSource type="POOLED">        
+	      <property name="driver" value="${driver}"/>        
+	      <property name="url" value="${url}"/>
+	      <property name="username" value="${username}"/>        
+	      <property name="password" value="${password}"/>      
+      </dataSource>    
+      </environment>  
+    </environments>
+    
+    <!-- SQL문장 위치 등록-->
+    <mappers>   
+      <mapper resource="com/sist/dao/board-mapper.xml"/>  
+    </mappers> 
+</configuration>

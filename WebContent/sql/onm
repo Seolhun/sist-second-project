@@ -1,0 +1,76 @@
+drop sequence seq_no;
+drop sequence seq_ol;
+DROP SEQUENCE seq_ocm;
+drop sequence seq_oc;
+DROP TABLE onmuser CASCADE CONSTRAINTS PURGE;
+DROP TABLE onmcard CASCADE CONSTRAINTS PURGE;
+DROP TABLE onmcomm CASCADE CONSTRAINTS PURGE;
+DROP TABLE onmlist CASCADE CONSTRAINTS PURGE;
+
+--유저
+CREATE TABLE onmuser(
+no number CONSTRAINT onmuser_no_pk primary key,
+email varchar2(30) CONSTRAINT onmuser_email_nn Not Null,
+nickname varchar2(20) CONSTRAINT onmuser_nickname_nn Not Null,
+pwd varchar2(30) CONSTRAINT onmuser_pwd_nn Not Null,
+joindate DATE DEFAULT SYSDATE,
+karma number DEFAULT 1
+);
+
+CREATE SEQUENCE seq_no
+	START WITH 1
+	INCREMENT BY 1;
+
+
+--리스트 
+CREATE TABLE onmlist(
+no number CONSTRAINT onmlist_no_pk primary key,
+userno number,
+title varchar2(50) CONSTRAINT onmlist_title_nn Not Null,
+html clob CONSTRAINT onmlist_html_nn Not Null,
+CONSTRAINT onmlist_uno_fk foreign key (userno) REFERENCES onmuser(no)
+);
+
+CREATE SEQUENCE seq_ol
+	START WITH 1
+	INCREMENT BY 1;
+
+--카드 
+CREATE TABLE onmcard(
+no NUMBER CONSTRAINT onmcard_no_pk primary key,
+userno NUMBER,
+title VARCHAR2(50) CONSTRAINT onmcard_title_nn not null,
+content CLOB,
+regdate DATE DEFAULT SYSDATE CONSTRAINT onmcard_regdate_nn not null,
+startdate VARCHAR(30),
+enddate VARCHAR(30),
+priority1 VARCHAR2(30),
+priority2 VARCHAR2(30),
+done VARCHAR2(10) default '1',
+label VARCHAR2(30),
+listno NUMBER,
+CONSTRAINT onmcard_userno_fk FOREIGN KEY (userno) REFERENCES onmuser(no)
+);
+
+CREATE SEQUENCE seq_oc
+	START WITH 1
+	INCREMENT BY 1;
+
+
+--컨텐트
+CREATE TABLE onmcomm(
+no NUMBER CONSTRAINT onmcomm_no_pk primary key,
+cardno NUMBER,
+function NUMBER,
+commreg DATE DEFAULT SYSDATE,
+cardcomm CLOB,
+CONSTRAINT onmcomm_cardno_fk FOREIGN KEY (cardno) REFERENCES onmcard(no) ON DELETE CASCADE
+);
+
+CREATE SEQUENCE seq_ocm
+	START WITH 1
+	INCREMENT BY 1;
+commit;
+
+
+

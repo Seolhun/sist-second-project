@@ -1,0 +1,24 @@
+CREATE TABLE onmlist(
+no number CONSTRAINT ol_no_pk primary key,
+userno number,
+title varchar2(50) CONSTRAINT ol_title_nn Not Null,
+html clob CONSTRAINT ol_html_nn Not Null,
+CONSTRAINT ol_uno_fk foreign key (userno) REFERENCES onmuser(no)
+);
+
+CREATE SEQUENCE seq_ol
+	START WITH 1
+	INCREMENT BY 1;
+
+
+/*
+INSERT INTO onmlist (no,titlel,html) VALUES(seq_ol.nextval,'user',);
+*/
+
+
+--검색 sql
+SELECT onmuser.email, onmcard.title,onmcard.content,onmcomm.cardcomm
+FROM onmuser
+INNER JOIN onmcard ON onmuser.no=onmcard.userno
+LEFT OUTER JOIN onmcomm ON onmcard.no=onmcomm.cardno
+WHERE (title LIKE '%검색%' OR CONTENT LIKE '%검색%') AND FUNCTION=90;

@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.board-mapper">
+	<!-- 회원가입 -->
+	<insert id="insertUser" parameterType="User">
+		INSERT INTO onmuser
+		VALUES(seq_no.NEXTVAL,#{email},#{nickname},#{pwd},SYSDATE,1)
+	</insert>
+
+	<!-- 회원가입 중복확인 -->
+	<select id="confirmEmail" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM onmuser where email=#{email}
+	</select>
+
+	<!-- 로그인 Mapper (email,pwd Check) -->
+	<select id="emailCheck" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM onmuser WHERE email=#{email}
+	</select>
+
+	<!-- 로그인 시 Session에 저장할 값들을 가져오는 SQL -->
+	<select id="logCheck" parameterType="User" resultType="User">
+		SELECT
+		no,nickname,pwd,email FROM ONMUSER WHERE email=#{email}
+	</select>
+
+	<!-- 비밀번호 찾기 -->
+	<select id="searchPwd" parameterType="User" resultType="String">
+		SELECT
+		pwd FROM ONMUSER WHERE email=#{email} and nickname=#{nickname}
+	</select>
+
+	<!-- 회원정보 변경용 DBPWD 비교하기 -->
+	<select id="getPwd" parameterType="String" resultType="String">
+		SELECT pwd
+		FROM ONMUSER WHERE email=#{email}
+	</select>
+
+	<!-- 회원정보 변경 -->
+	<update id="changeUserInfo" parameterType="User">
+		UPDATE ONMUSER SET
+		nickname=#{nickname}, pwd=#{pwd} WHERE email=#{email}
+	</update>
+
+	<!-- onm.jsp 호출시 list 출력 -->
+	<select id="listSearch" resultType="Olist" parameterType="int">
+		SELECT
+		title,html FROM onmlist WHERE userno=#{userno} ORDER BY no
+	</select>
+
+	<!-- 리스트 생성시 no 생성 -->
+	<insert id="listInsert" parameterType="int">
+		INSERT INTO onmlist
+		VALUES(seq_ol.nextval,#{userno},'test','test')
+	</insert>
+
+	<!-- 리스트 성성시 생성된 no 가져가기 -->
+	<select id="getListNo" resultType="int">
+		SELECT MAX(no) FROM onmlist
+	</select>
+
+	<!-- 리스트 성생시 정보 업데이트 -->
+	<update id="listAdd" parameterType="Olist">
+		UPDATE onmlist SET
+		title=#{title},html=#{html} WHERE no=#{no}
+	</update>
+
+	<!-- list 삭제 -->
+	<delete id="listDelete" parameterType="int">
+		DELETE FROM onmlist WHERE
+		no=#{no}
+	</delete>
+
+	<!-- list 업데이트 -->
+	<update id="dragEvent" parameterType="Olist">
+		UPDATE onmlist SET
+		html=#{html} WHERE no=#{no}
+	</update>
+
+	<update id="cardListnoUpdate" parameterType="Ocard">
+		UPDATE onmcard SET
+		listno=#{listno} WHERE no=#{no}
+	</update>
+
+	<delete id="listCardDelete" parameterType="int">
+		DELETE FROM onmcard WHERE listno=#{listno}
+	</delete>
+
+	<!-- 카드생성 -->
+	<insert id="createCard" parameterType="Ocard">
+		INSERT INTO onmcard
+		VALUE(no,userno,title,regdate)
+		VALUES((seq_oc.nextval),#{userno},#{title},SYSDATE)
+	</insert>
+
+	<update id="cardListno" parameterType="Ocard">
+		UPDATE onmcard SET
+		listno=#{listno} WHERE no=#{no}
+	</update>
+
+	<!-- 카드 생성시 no -->
+	<select id="getCardNo" resultType="int">
+		SELECT MAX(no) FROM onmcard
+	</select>
+
+	<!-- 카드 정보 출력 -->
+	<select id="getCardInfo" resultType="Ocard" parameterType="int">
+		SELECT
+		no,userno,title,content,regdate,startdate,enddate,priority1,priority2,done,label
+		FROM onmcard WHERE no=#{no}
+	</select>
+
+	<!-- 카드 삭제 -->
+	<delete id="cardDelete" parameterType="int">
+		DELETE FROM onmcard WHERE
+		no=#{no}
+	</delete>
+
+	<!-- 카드 삭제 전에 comm 모두 삭제 -->
+	<delete id="deleteAllComm" parameterType="int">
+		DELETE FROM onmcomm
+		WHERE cardno=#{cardno}
+	</delete>
+
+	<!-- card 업데이트 -->
+	<update id="cardUpdate" parameterType="Olist">
+		UPDATE onmlist SET
+		html=#{html} WHERE no=#{no}
+	</update>
+
+	<!-- 캘린더 드래그 드롭 업데이트 -->
+	<update id="dateDrag" parameterType="Ocard">
+		UPDATE onmcard SET startdate=#{startdate},enddate=#{enddate} WHERE
+		no=#{no} <!-- where절에 cardid가와야됨 -->
+	</update>
+
+	<!-- onm.jsp 호출시 card date 출력 -->
+	<select id="loadCard" resultType="Ocard" parameterType="int">
+		SELECT
+		startdate,enddate,title,label,no FROM onmcard WHERE userno=#{userno}
+		AND startdate is not null
+	</select>
+
+	<!-- card date Update -->
+	<update id="cardDateUpdate" parameterType="Ocard">
+		UPDATE onmcard SET
+		startdate=#{startdate},enddate=#{enddate} WHERE no=#{no}
+	</update>
+
+	<!-- card date Delete -->
+	<update id="cardDateDelete" parameterType="int">
+		UPDATE onmcard SET
+		startdate=null,enddate=null WHERE no=#{no}
+	</update>
+
+	<!-- card label update -->
+	<update id="cardLabelUpdate" parameterType="Ocard">
+		UPDATE onmcard SET
+		label=#{label} WHERE no=#{no}
+	</update>
+
+	<!-- card label delete -->
+	<update id="cardLabelDelete" parameterType="int">
+		UPDATE onmcard SET
+		label=null WHERE no=#{no}
+	</update>
+
+	<!-- card content update -->
+	<update id="cardContentUpdate" parameterType="Ocard">
+		UPDATE onmcard SET
+		content=#{content} WHERE no=#{no}
+	</update>
+
+	<!-- card priority update -->
+	<update id="cardPriorityUpdate" parameterType="Ocard">
+		UPDATE onmcard SET
+		priority1=#{priority1},priority2=#{priority2} WHERE
+		no=#{no}
+	</update>
+
+	<!-- card priority delete -->
+	<update id="cardPriorityDelete" parameterType="int">
+		UPDATE onmcard SET
+		priority1=null,priority2=null WHERE no=#{no}
+	</update>
+	<!-- card open update -->
+	<update id="cardOpenUpdate" parameterType="Ocard">
+		UPDATE onmcard SET
+		done=#{done} WHERE no=#{no}
+	</update>
+
+	<!-- 맵 Insert -->
+	<insert id="mapInsert" parameterType="Comm">
+		INSERT INTO onmcomm
+		VALUES(seq_ocm.nextval,#{cardno},1,SYSDATE,#{cardcomm})
+	</insert>
+
+	<!-- 맵 update -->
+	<update id="mapUpdate" parameterType="Comm">
+		UPDATE onmcomm SET
+		cardcomm=#{cardcomm} WHERE cardno=#{cardno} AND function=1
+	</update>
+
+	<!-- 맵 존재하는지 검사 -->
+	<select id="countMap" parameterType="int" resultType="int">
+		SELECT
+		COUNT(*) FROM onmcomm WHERE cardno=#{cardno} AND function=1
+	</select>
+
+	<!-- card open시 맵 load -->
+	<select id="loadMap" parameterType="int" resultType="String">
+		SELECT
+		cardcomm FROM onmcomm WHERE cardno=#{cardno} AND function=1
+	</select>
+
+	<!-- card map delete -->
+	<delete id="mapDelete" parameterType="int">
+		DELETE FROM onmcomm WHERE
+		cardno=#{cardno} AND function=1
+	</delete>
+
+	<!-- checklist title create -->
+	<insert id="checkListCreate" parameterType="Comm">
+		INSERT INTO onmcomm
+		VALUES(seq_ocm.nextval,#{cardno},2,SYSDATE,#{cardcomm})
+	</insert>
+
+	<!-- checklist update -->
+	<insert id="checkListUpdate" parameterType="Comm">
+		INSERT INTO onmcomm
+		VALUES(seq_ocm.nextval,#{cardno},3,SYSDATE,#{cardcomm})
+	</insert>
+
+	<!-- checklist get no -->
+	<select id="getCheckListNo" resultType="int">
+		SELECT MAX(no) FROM
+		onmcomm
+	</select>
+
+	<!-- checklist function change -->
+	<update id="checkListChange" parameterType="Comm">
+		UPDATE onmcomm SET
+		function = #{function} WHERE no=#{no}
+	</update>
+
+	<!-- checklist delete -->
+	<delete id="checkListDelete" parameterType="int">
+		DELETE FROM onmcomm
+		WHERE cardno=#{cardno} AND (function=2 OR function=3)
+	</delete>
+
+	<!-- load checklist title -->
+	<select id="loadCheckListTitle" parameterType="int" resultType="String">
+		SELECT cardcomm FROM onmcomm WHERE cardno=#{cardno} AND function=2
+	</select>
+
+	<!-- load comm list -->
+	<select id="loadCommList" parameterType="int" resultType="Comm">
+		SELECT
+		no,cardcomm FROM onmcomm WHERE cardno=#{cardno} AND function=99 ORDER
+		BY no
+	</select>
+
+	<!-- load checklist -->
+	<select id="loadCheckList" parameterType="int" resultType="Comm">
+		SELECT no,function,cardcomm FROM onmcomm WHERE cardno=#{cardno} AND
+		(function=3 OR function=4) ORDER BY no
+	</select>
+
+	<!-- comment insert -->
+	<insert id="commentCreate" parameterType="Comm">
+		INSERT INTO onmcomm
+		VALUES(seq_ocm.nextval,#{cardno},99,SYSDATE,#{cardcomm})
+	</insert>
+
+	<!-- comm delete -->
+	<delete id="deleteComm" parameterType="int">
+		DELETE FROM onmcomm WHERE
+		no=#{no}
+	</delete>
+
+	<!-- hash insert -->
+	<insert id="hashInsert" parameterType="Comm">
+		INSERT INTO onmcomm
+		VALUES(seq_ocm.nextval,#{cardno},90,SYSDATE,#{cardcomm})
+	</insert>
+
+	<!-- hash Update -->
+	<update id="hashUpdate" parameterType="Comm">
+		UPDATE onmcomm SET
+		cardcomm = #{cardcomm} WHERE function=90 AND cardno = #{cardno}
+	</update>
+
+	<!-- count hash -->
+	<select id="countHash" resultType="int" parameterType="int">
+		SELECT
+		COUNT(*) FROM onmcomm WHERE function=90 AND cardno=#{cardno}
+	</select>
+
+	<!-- load hash -->
+	<select id="loadHash" parameterType="int" resultType="String">
+		SELECT
+		cardcomm FROM onmcomm WHERE cardno=#{cardno} AND function=90
+	</select>
+
+	<!-- 파일 존재하는지 검사 -->
+	<select id="countFile" parameterType="int" resultType="int"> SELECT
+		COUNT(*) FROM onmcomm WHERE cardno=#{cardno} AND function=5
+	</select>
+
+	<!-- file insert -->
+	<insert id="fileInsert" parameterType="Comm">
+		INSERT INTO onmcomm
+		VALUES(seq_ocm.nextval,#{cardno},5,SYSDATE,#{cardcomm})
+	</insert>
+
+	<!-- file update -->
+	<update id="fileUpdate" parameterType="Comm">
+		UPDATE onmcomm SET
+		cardcomm=#{cardcomm} WHERE function=5 AND cardno=#{cardno}
+	</update>
+
+	<!-- file Delete -->
+	<delete id="fileDelete" parameterType="int">
+		DELETE FROM onmcomm WHERE
+		cardno=#{cardno} AND function=5
+	</delete>
+
+	<!-- load hash -->
+	<select id="loadFile" parameterType="int" resultType="String">
+		SELECT
+		cardcomm FROM onmcomm WHERE cardno=#{cardno} AND function=5
+	</select>
+
+	<!-- 검색 (MyPlan) -->
+	<!-- <select id="searchMyPlan" parameterType="java.util.Map" resultType="Search"> 
+		SELECT onmuser.nickname,onmcard.title,onmcard.content,onmcomm.cardcomm,onmcard.no 
+		FROM onmuser INNER JOIN onmcard ON onmuser.no=onmcard.userno LEFT OUTER JOIN 
+		onmcomm ON onmcard.no=onmcomm.cardno WHERE (onmcard.title LIKE '%'||#{inputSearch}||'%' 
+		OR onmcard.CONTENT LIKE '%'||#{inputSearch}||'%') AND function=90 AND onmuser.nickname=#{logNickname} 
+		</select> -->
+	<select id="searchMyPlan" parameterType="java.util.Map"
+		resultType="Search">
+		SELECT nickname,title,content,onmcard.no FROM onmuser,
+		onmcard WHERE onmuser.no=onmcard.userno
+		AND (title LIKE '%'||#{inputSearch}||'%' OR CONTENT LIKE
+		'%'||#{inputSearch}||'%') AND
+		onmuser.no=#{logUserNo}
+	</select>
+	<!-- <select id="searchAllPlan" parameterType="java.util.Map" resultType="Search"> 
+		SELECT onmuser.nickname,onmcard.title,onmcard.content,onmcomm.cardcomm,onmcomm.no 
+		FROM onmuser INNER JOIN onmcard ON onmuser.no=onmcard.userno LEFT OUTER JOIN 
+		onmcomm ON onmcard.no=onmcomm.cardno WHERE (onmcard.title LIKE '%'||#{inputSearch}||'%' 
+		OR CONTENT LIKE '%'||#{inputSearch}||'%') AND onmcard.done=1 </select> -->
+	<select id="searchAllPlan" parameterType="java.util.Map"
+		resultType="Search">
+		SELECT nickname,title,content,onmcard.no FROM onmuser,
+		onmcard WHERE onmuser.no=onmcard.userno
+		AND (title LIKE '%'||#{inputSearch}||'%' OR CONTENT LIKE
+		'%'||#{inputSearch}||'%') AND
+		onmcard.done=1
+	</select>
+	<select id="searchHashPlan" parameterType="java.util.Map"
+		resultType="Search">
+		SELECT
+		onmuser.nickname,onmcard.title,onmcard.content,onmcomm.cardcomm,onmcard.no
+		FROM onmuser
+		INNER JOIN onmcard ON onmuser.no=onmcard.userno
+		LEFT OUTER
+		JOIN onmcomm ON onmcard.no=onmcomm.cardno
+		WHERE (cardcomm LIKE
+		'%'||#{inputSearch}||'%') AND FUNCTION=90 AND onmcard.done=1
+	</select>
+	<select id="searchHashTag" parameterType="int" resultType="String">
+		SELECT cardcomm FROM onmcomm WHERE cardno=#{no} AND function=90
+	</select>
+</mapper>
