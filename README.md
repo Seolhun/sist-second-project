@@ -11,10 +11,10 @@
 ### Summary
 ![1. Login](readme/1.png)
 
-![1. Calendar & Plan](readme/2.png)
+![2. Calendar & Plan](readme/2.png)
 
-![1. Play Write & Detail](readme/3.png)
+![3. Play Write & Detail](readme/3.png)
 
-![1. Searching](readme/4.png)
+![4. Searching](readme/4.png)
 
-![1. Summary](readme/5.png)
+![5. Summary](readme/5.png)
